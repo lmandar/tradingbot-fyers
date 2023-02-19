@@ -6,7 +6,7 @@ const orderService = require('./fyersAPI/order')
 const fyers = require("fyers-api-v2");
 const interval_data_service = require('./interval_data')
 const auth_service = require('./fyersAPI/auth')
-
+const PORT = process.env.PORT || 3000
 app = express();
 app.get('/callback', auth)
 app.post('/auth-code', interval_data_service.genrateAuthcode)
@@ -50,7 +50,7 @@ async function startDataLogic() {
         let order = await orderService.placeOrder(parameters) // place order
         if (order.orderId) {
             open_order = 1
-            
+
         }
     } catch (err) {
         console.log("Error", err)
@@ -100,6 +100,6 @@ cron.schedule("* 9 * * *", async function () {
     }
 });
 
-app.listen(3000, () => {
+app.listen(PORT, () => {
     console.log("application listening.....");
 });
