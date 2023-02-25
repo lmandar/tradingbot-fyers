@@ -37,14 +37,14 @@ async function startDataLogic() {
         let take_profit = stoploss * 2
         let qty = 50 /(high-entry).toFixed()
         let parameters = { "entry": entry, "stoploss": stoploss, "take_profit": take_profit, "qty" : qty }
-        // Intraday/Daily Chg = (Price - Prev Day's Close) / Prev Day's Close * 100
+        //Formula Intraday/Daily Chg = (Price - Prev Day's Close) / Prev Day's Close * 100 
         let percentage = ((trade_candle.l - trade_candle.h) / trade_candle.o * 100).toFixed(2)
         if(percentage < -1.50){
             parameters.stoploss = 5
             parameters.take_profit = 10
             parameters.qty = 10
         }
-        console.log("[percentage]",percentage)
+        console.log("[percentage]",percentage) 
         console.log("[parameters]",parameters)
         
         let order = await orderService.placeOrder(parameters) // place order
