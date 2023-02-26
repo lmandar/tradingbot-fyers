@@ -18,7 +18,6 @@ module.exports = {
     startDataLogic,
     auth
 }
-let open_order = 0
 
 async function startDataLogic() {
     try {
@@ -28,7 +27,7 @@ async function startDataLogic() {
         var millsecEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 15, 30, 0, 0);
         let start_time = Math.floor (millisTill10.getTime() / 1000) 
         let end_time = Math.floor (millsecEnd.getTime() / 1000) 
-
+        let master = await Masetr.findOne({status : 1})
         let trade_candle = await interval_data_service.getHistory(start_time,end_time)
         if (!trade_candle) {
             throw "Please check internet"
@@ -53,7 +52,9 @@ async function startDataLogic() {
         let order = await orderService.placeOrder(parameters) // place order
         if (order.orderId) {
             open_order = 1
-
+            master.open_order = open_order
+            let update = master.save()
+            console.log("update open order here", update.open_order)
         }
     } catch (err) {
         console.log("Error", err)
@@ -98,11 +99,11 @@ async function getURL(req,res){
 }
 }
 
-cron.schedule("*/3 * * * *", async function () {
+cron.schedule("*/5 * * * *", async function () {
     let master = await Masetr.findOne({status : 1})
     let date = new Date().toISOString();
     console.log("inside scheduler", date)
-    if (master.open_order == 0) {
+    if (master.open_order == 0 && master.status == 1) {
         startDataLogic();
     }
 });
@@ -111,8 +112,9 @@ cron.schedule("* 9 * * *", async function () {
     let master = await Masetr.findOne({status : 1})
     let date = new Date().toISOString();
     console.log("inside scheduler", date)
-    if (master.open_order == 0) {
-        startDataLogic();
+    if (master != null) {
+        master.open_order == 0
+        master.save() 
     }
 });
 
