@@ -7,7 +7,9 @@ const schemea = new mongoose.Schema({
     statu: { type: Number },
     secret_key: { type: String, require : true },
     app_id: { type: String, require : true },
-    open_order : {type : Number}
+    open_order : {type : Number},
+    redirect_url : {type :String},
+    url : {type : String}
 })
 
 const Master = new mongoose.model("Master", schemea);

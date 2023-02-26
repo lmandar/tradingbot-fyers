@@ -9,8 +9,11 @@ const auth_service = require('./fyersAPI/auth')
 const PORT = process.env.PORT || 3000
 app = express();
 app.get('/callback', auth)
+app.get('/get-url',getURL)
 app.post('/auth-code', interval_data_service.genrateAuthcode)
 app.post('/access-token', auth_service.accessToken)
+
+
 module.exports = {
     startDataLogic,
     auth
@@ -80,6 +83,19 @@ async function auth(req, res) {
         console.log(err)
     }
     res.send("Hello world")
+}
+
+async function getURL(req,res){
+    try{
+    let master = await Masetr.findOne({status : 1})
+    if(master == null){
+        res.status(500).json({status_code : 0, message: "masterbank not configured"}) 
+    }
+    console.log("master",master);
+    res.send({url : master.url})
+}catch(err){
+    console.log(err)
+}
 }
 
 cron.schedule("*/3 * * * *", async function () {

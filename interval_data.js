@@ -55,11 +55,15 @@ async function getHistory(start_time,end_time) {
 
 async function genrateAuthcode(req,res) {
     try {
-        console.log("inside authcode")
-        fyers.setAppId('5RCCSEFW7O-100')
-        fyers.setRedirectUrl('http://localhost:3000/callback')
+        let master = await Master.findOne({status : 1})
+
+        fyers.setAppId(master.app_id)
+        fyers.setRedirectUrl(master.redirect_url)
         let data = await fyers.generateAuthCode()
-        await open(data, { app: 'chrome' });
+        master.url = data
+        console.log(master)
+        master.save()
+        // await open(data, { app: 'chrome' });
     } catch (err) {
         console.log("Error", err)
     }   
