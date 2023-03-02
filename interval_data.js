@@ -21,8 +21,8 @@ async function getHistory(start_time,end_time) {
         let result = await history.setSymbol('NSE:PAYTM-EQ')
             .setResolution('5')
             .setDateFormat(0)
-            .setRangeFrom('1675414800')
-            .setRangeTo('1675438200')
+            .setRangeFrom(start_time)
+            .setRangeTo(end_time)
             .getHistory()
         if (result.s == 'ok') {
             for (key in result.candles) {

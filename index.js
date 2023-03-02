@@ -99,7 +99,7 @@ async function getURL(req,res){
 }
 }
 
-cron.schedule("*/5 * * * *", async function () {
+cron.schedule("*/1 * * * *", async function () {
     let master = await Masetr.findOne({status : 1})
     let date = new Date().toISOString();
     console.log("inside scheduler", date)
@@ -120,4 +120,4 @@ cron.schedule("* 9 * * *", async function () {
 
 app.listen(PORT, () => {
     console.log("application listening.....");
-});
+});22
