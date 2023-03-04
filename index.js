@@ -99,7 +99,7 @@ async function getURL(req,res){
 }
 }
 
-cron.schedule("*/1 * * * *", async function () {
+cron.schedule("*/5 * * * *", async function () {
     let master = await Masetr.findOne({status : 1})
     let date = new Date().toISOString();
     console.log("inside scheduler", date)
@@ -115,6 +115,16 @@ cron.schedule("* 9 * * *", async function () {
     if (master != null) {
         master.open_order == 0
         master.save() 
+    }
+});
+
+cron.schedule("10 3 * * *", async function () {
+    let master = await Masetr.findOne({status : 1})
+    let date = new Date().toISOString();
+    console.log("inside scheduler", date)
+    if (master != null) {
+        let exit_all_position = await orderService.exitAllPosition(master) 
+        console.log(exit_all_position)
     }
 });
 

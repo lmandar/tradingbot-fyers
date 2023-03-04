@@ -9,7 +9,8 @@ fyers.setAccessToken('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJhcGkuZnllc
 let reqBody = {}
 
 module.exports = {
-    placeOrder
+    placeOrder,
+    exitAllPosition
 }
 
 async function placeOrder(reqData) {
@@ -40,5 +41,18 @@ async function placeOrder(reqData) {
             throw `Order failed because of ${place_order.message}`
         }else{
             return place_order   
+        }
+}
+
+async function exitAllPosition(reqData){
+
+    const reqBody = {
+        data:{},
+        app_id: reqData.app_id,   
+        token: reqData.access_token
+        }
+        const exitPosition= await fyers.exit_position(reqBody)
+        if(exitPosition.s == "error"){
+            throw {message: exitPosition.message}
         }
 }
