@@ -6,8 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
-    "dev" : "nodemon index.js",
-    "heroku-postbuild":"NPM_CONFIG_PRODUCTION=false npm install --prefix Backend && npm run build --prefix Backend"
+    "dev": "nodemon index.js",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix Backend && npm run build --prefix Backend"
   },
   "author": "",
   "license": "ISC",
@@ -26,6 +26,7 @@
     "node-cron": "^3.0.2",
     "open": "^8.4.0",
     "selenium-webdriver": "^4.7.1",
+    "technicalindicators": "^3.1.0",
     "ws": "^8.11.0",
     "xmlhttprequest": "^1.8.0"
   }

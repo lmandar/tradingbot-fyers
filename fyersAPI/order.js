@@ -14,7 +14,7 @@ module.exports = {
 }
 
 async function placeOrder(reqData) {
-    let master = await Master.findOne({status : 1})
+    let master = await Master.findOne({ status: 1 })
     reqBody = {
         data: {
             "symbol": "NSE:PAYTM-EQ",
@@ -36,23 +36,24 @@ async function placeOrder(reqData) {
         token: master.access_token
 
     }
-    const place_order = await fyers.place_order(reqBody)
-        if(place_order.s != 'ok'){
-            throw `Order failed because of ${place_order.message}`
-        }else{
-            return place_order   
-        }
+    let place_order = await fyers.place_order(reqBody)
+    console.log("place order", place_order)
+    if (place_order.s != 'ok') {
+        throw `Order failed because of ${place_order.message}`
+    } else {
+        return place_order
+    }
 }
 
-async function exitAllPosition(reqData){
+async function exitAllPosition(reqData) {
 
     const reqBody = {
-        data:{},
-        app_id: reqData.app_id,   
+        data: {},
+        app_id: reqData.app_id,
         token: reqData.access_token
-        }
-        const exitPosition= await fyers.exit_position(reqBody)
-        if(exitPosition.s == "error"){
-            throw {message: exitPosition.message}
-        }
+    }
+    const exitPosition = await fyers.exit_position(reqBody)
+    if (exitPosition.s == "error") {
+        throw { message: exitPosition.message }
+    }
 }

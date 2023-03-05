@@ -5,6 +5,7 @@ const Masetr = require('./common_model/master-model')
 const orderService = require('./fyersAPI/order')
 const fyers = require("fyers-api-v2");
 const interval_data_service = require('./interval_data')
+const indicatorService = require('./indicators/indicator.service')
 const auth_service = require('./fyersAPI/auth')
 const PORT = process.env.PORT || 3000
 app = express();
@@ -12,6 +13,8 @@ app.get('/callback', auth)
 app.get('/get-url',getURL)
 app.post('/auth-code', interval_data_service.genrateAuthcode)
 app.post('/access-token', auth_service.accessToken)
+app.post('/bollinger-band', indicatorService.bollingerBand)
+app.post('/on-off', auth_service.onOFF)
 
 
 module.exports = {
@@ -22,7 +25,6 @@ module.exports = {
 async function startDataLogic() {
     try {
         var now = new Date();
-        let current_time = now.getTime()
         var millisTill10 = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 09, 15, 0, 0);
         var millsecEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 15, 30, 0, 0);
         let start_time = Math.floor (millisTill10.getTime() / 1000) 
@@ -50,10 +52,10 @@ async function startDataLogic() {
         console.log("[parameters]",parameters)
         
         let order = await orderService.placeOrder(parameters) // place order
-        if (order.orderId) {
+        if (order.id) {
             open_order = 1
             master.open_order = open_order
-            let update = master.save()
+            let update = await master.save()
             console.log("update open order here", update.open_order)
         }
     } catch (err) {
@@ -99,10 +101,10 @@ async function getURL(req,res){
 }
 }
 
-cron.schedule("*/5 * * * *", async function () {
+cron.schedule("*/1 * * * *", async function () {
     let master = await Masetr.findOne({status : 1})
     let date = new Date().toISOString();
-    console.log("inside scheduler", date)
+    console.log("inside scheduler every 5 min", date)
     if (master.open_order == 0 && master.status == 1) {
         startDataLogic();
     }
@@ -110,8 +112,13 @@ cron.schedule("*/5 * * * *", async function () {
 
 cron.schedule("* 9 * * *", async function () {
     let master = await Masetr.findOne({status : 1})
+    // fyers.setAppId(master.app_id)
+    // fyers.setAccessToken(master.access_token)
+    // let market_status = await fyers.market_status()
+    // console.log("market_status",market_status)
+
     let date = new Date().toISOString();
-    console.log("inside scheduler", date)
+    console.log("inside scheduler daily 9 AM", date)
     if (master != null) {
         master.open_order == 0
         master.save() 
@@ -121,7 +128,7 @@ cron.schedule("* 9 * * *", async function () {
 cron.schedule("10 3 * * *", async function () {
     let master = await Masetr.findOne({status : 1})
     let date = new Date().toISOString();
-    console.log("inside scheduler", date)
+    console.log("inside scheduler daily 3:10 pm", date)
     if (master != null) {
         let exit_all_position = await orderService.exitAllPosition(master) 
         console.log(exit_all_position)
@@ -130,4 +137,4 @@ cron.schedule("10 3 * * *", async function () {
 
 app.listen(PORT, () => {
     console.log("application listening.....");
-});22
+});
