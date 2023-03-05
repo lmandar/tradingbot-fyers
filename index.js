@@ -128,7 +128,7 @@ cron.schedule("* 9 * * *", async function () {
 cron.schedule("10 3 * * *", async function () {
     let master = await Masetr.findOne({status : 1})
     let date = new Date().toISOString();
-    console.log("inside scheduler daily 3:10 pm", date)
+    console.log("inside scheduler  daily 3:10 pm", date)
     if (master != null) {
         let exit_all_position = await orderService.exitAllPosition(master) 
         console.log(exit_all_position)
