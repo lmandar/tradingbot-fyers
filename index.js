@@ -101,7 +101,7 @@ async function getURL(req,res){
 }
 }
 
-cron.schedule("*/1 * * * *", async function () {
+cron.schedule("*/5 * * * *", async function () {
     let master = await Masetr.findOne({status : 1})
     let date = new Date().toISOString();
     console.log("inside scheduler every 5 min", date)
@@ -110,7 +110,7 @@ cron.schedule("*/1 * * * *", async function () {
     }
 });
 
-cron.schedule("* 9 * * *", async function () {
+cron.schedule("0 9 * * *", async function () {
     let master = await Masetr.findOne({status : 1})
     // fyers.setAppId(master.app_id)
     // fyers.setAccessToken(master.access_token)
@@ -121,7 +121,7 @@ cron.schedule("* 9 * * *", async function () {
     console.log("inside scheduler daily 9 AM", date)
     if (master != null) {
         master.open_order == 0
-        master.save() 
+        await master.save() 
     }
 });
 

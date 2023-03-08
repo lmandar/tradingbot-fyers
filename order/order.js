@@ -1,6 +1,5 @@
 const crypto = require('crypto')
 const axios = require('axios');
-const { take_profit } = require('../interval_data');
 const orderSchema = require("./order.model")
 const fyers = require("fyers-api-v2")
 require('./../DB/dbConnection')

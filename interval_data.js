@@ -9,7 +9,7 @@ module.exports = {
     genrateAuthcode
 }
 
-async function getHistory(start_time,end_time) {
+async function getHistory(start_time, end_time) {
     try {
         let master = await Master.findOne({ status: 1 })
         fyers.setAppId(master.app_id)
@@ -53,9 +53,9 @@ async function getHistory(start_time,end_time) {
 }
 
 
-async function genrateAuthcode(req,res) {
+async function genrateAuthcode(req, res) {
     try {
-        let master = await Master.findOne({status : 1})
+        let master = await Master.findOne({ status: 1 })
 
         fyers.setAppId(master.app_id)
         fyers.setRedirectUrl(master.redirect_url)
@@ -66,6 +66,6 @@ async function genrateAuthcode(req,res) {
         // await open(data, { app: 'chrome' });
     } catch (err) {
         console.log("Error", err)
-    }   
+    }
 }
 
