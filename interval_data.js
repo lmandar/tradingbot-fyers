@@ -34,19 +34,12 @@ async function getHistory(start_time, end_time) {
                     l: data[3],
                     c: data[4]
                 }
-                if (a.o > a.c) {
-                    sell_data.push(a)
-                    break;
-                }
+                sell_data.push(a)
             }
-            return sell_data[0]
-        } else if (result.code == '-8') {
-            console.log("result", result)
-            await genrateAuthcode()
+            return sell_data
         } else {
             throw result.message
         }
-        console.log(sell_data)
     } catch (err) {
         console.log(err)
     }

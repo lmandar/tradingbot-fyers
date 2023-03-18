@@ -14,6 +14,7 @@ module.exports = {
 }
 
 async function placeOrder(reqData) {
+try{
     let master = await Master.findOne({ status: 1 })
     reqBody = {
         data: {
@@ -39,10 +40,12 @@ async function placeOrder(reqData) {
     let place_order = await fyers.place_order(reqBody)
     console.log("place order", place_order)
     if (place_order.s != 'ok') {
-        throw `Order failed because of ${place_order.message}`
-    } else {
         return place_order
+        // throw `Order failed because of ${place_order.message}`
     }
+}catch(err){
+    console.log(err)
+}
 }
 
 async function exitAllPosition(reqData) {
