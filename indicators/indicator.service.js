@@ -1,13 +1,13 @@
 var BB = require('technicalindicators').BollingerBands
+const EMA = require('technicalindicators').EMA
 const fyers = require("fyers-api-v2")
-const Master = require("../common_model/master-model")
 const orderService = require('../fyersAPI/order')
-
 
 
 module.exports = {
     bollingerBand,
-    getHistory
+    getHistory,
+    ema
 }
 
 async function bollingerBand(req, res) {
@@ -109,4 +109,12 @@ async function getHistory(start_time, end_time) {
     } catch (err) {
         console.log(err)
     }
+}
+
+async function ema(reqData){
+    let period = 5;
+    let values = reqData;                    
+    let ema = EMA.calculate({period : period, values : values})
+    console.log("ema",ema)
+    return ema  
 }

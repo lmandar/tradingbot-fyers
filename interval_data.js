@@ -36,6 +36,7 @@ async function getHistory(start_time, end_time) {
                 }
                 sell_data.push(a)
             }
+            console.log(sell_data)
             return sell_data
         } else {
             throw result.message

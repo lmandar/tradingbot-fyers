@@ -9,7 +9,8 @@ const schemea = new mongoose.Schema({
     app_id: { type: String, require : true },
     open_order : {type : Number},
     redirect_url : {type :String},
-    url : {type : String}
+    url : {type : String},
+    order_id:{type : String}
 })
 
 const Master = new mongoose.model("Master", schemea);

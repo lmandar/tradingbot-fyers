@@ -10,53 +10,58 @@ let reqBody = {}
 
 module.exports = {
     placeOrder,
-    exitAllPosition
+    exitAllPosition,
+    cancelOrder
 }
 
 async function placeOrder(reqData) {
-try{
-    let master = await Master.findOne({ status: 1 })
-    reqBody = {
-        data: {
-            "symbol": "NSE:PAYTM-EQ",
-            "qty": reqData.qty,
-            "type": 3,  /* 1 => Limit Order 2 => Market Order 3 => Stop Order (SL-M) 4 => Stoplimit Order (SL-L) */
-            "side": -1,
-            "productType": "BO", /* CNC => For equity only INTRADAY => Applicable for all segments. MARGIN => Applicable only for derivatives CO => Cover Order BO => Bracket Order */
-            "limitPrice": 0, /* Default => 0 Provide valid price for Limit and Stoplimit orders */
-            "stopPrice": reqData.entry,
-            "disclosedQty": 0,
-            "validity": "DAY",
-            "offlineOrder": "false",
-            "stopLoss": reqData.stoploss,
-            "takeProfit": reqData.take_profit
-        },
+    try {
+        let master = await Master.findOne({ status: 1 })
+        reqBody = {
+            data: {
+                "symbol": "NSE:PAYTM-EQ",
+                "qty": reqData.qty,
+                "type": 4,  /* 1 => Limit Order 2 => Market Order 3 => Stop Order (SL-M) 4 => Stoplimit Order (SL-L) */
+                "side": -1,
+                "productType": "BO", /* CNC => For equity only INTRADAY => Applicable for all segments. MARGIN => Applicable only for derivatives CO => Cover Order BO => Bracket Order */
+                "limitPrice": reqData.limitPrice, /* Default => 0 Provide valid price for Limit and Stoplimit orders */
+                "stopPrice": reqData.entry,
+                "disclosedQty": 0,
+                "validity": "DAY",
+                "offlineOrder": "false",
+                "stopLoss": reqData.stoploss,
+                "takeProfit": reqData.take_profit
+            },
+            app_id: master.app_id,
+            token: master.access_token
 
-        app_id: master.app_id,
-
-        token: master.access_token
-
-    }
-    let place_order = await fyers.place_order(reqBody)
-    console.log("place order", place_order)
-    if (place_order.s != 'ok') {
+        }
+        let place_order = await fyers.place_order(reqBody)
+        console.log("place order", place_order)
         return place_order
-        // throw `Order failed because of ${place_order.message}`
+    } catch (err) {
+        console.log(err)
     }
-}catch(err){
-    console.log(err)
-}
 }
 
 async function exitAllPosition(reqData) {
-
-    const reqBody = {
+    let reqBody = {
         data: {},
         app_id: reqData.app_id,
         token: reqData.access_token
     }
     const exitPosition = await fyers.exit_position(reqBody)
-    if (exitPosition.s == "error") {
-        throw { message: exitPosition.message }
+    console.log("exitPosition", exitPosition)
+    return exitPosition
+}
+
+async function cancelOrder(reqData) {
+    let reqBody = {
+        data: { "id": reqData.order_id },
+        app_id: reqData.app_id,
+        token: reqData.access_token
     }
+    let cancel_order = await fyers.cancel_order(reqBody)
+    console.log("cancel order", cancel_order)
+    return cancel_order
 }
