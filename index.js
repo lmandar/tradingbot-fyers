@@ -104,6 +104,7 @@ async function auth(req, res) {
         console.log("inside auth")
         let auth_code = req.query.auth_code
         let master = await Master.findOne({ "broker": "fyers" })
+        console.log(master)
         master.auth_code = auth_code
         fyers.setAppId(master.app_id)
         reqBody = {
