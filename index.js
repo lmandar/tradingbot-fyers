@@ -101,9 +101,9 @@ module.exports = {
 
 async function auth(req, res) {
     try {
-        console.log("inside auth")
-        let auth_code = req.query.auth_code
+        console.log("inside auth",req.query)
         let master = await Master.findOne({ "broker": "fyers" })
+        let auth_code = req.query.auth_code
         console.log(master)
         master.auth_code = auth_code
         fyers.setAppId(master.app_id)
